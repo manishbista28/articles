@@ -1,7 +1,7 @@
 ## What does a community look like ?
 We've heard and mostly understood that blockchains are community driven. But what does  ~~Marsellus Wallace~~ this community look like ? It's necessary to think about an answer to this question because it determines the nature of your target demography if you're building a decentralized app on a blockchain. Understanding the community will give answers to questions like the following -- for a certain dapp, how many unique users are there who could be interested, are there similar products that can co-exist and reinforce each other, how likely is it for users of other categories to try yours and as such how does it resonate with the ecosystem's direction.
 
-## Is it a group of clusters ?
+## Is it clusters of users ?
 To start, there are only a handful of product categories out there yet. Because of the restrictions in privacy and scalability aspects of blockchains today, developers have been [focusing on](https://youtu.be/DVj3uMwohSQ?t=289) low volume dapps. Numerous DeFi applications, an increasing number of on-chain games, marketplaces and social dapps to name a few of those [out there](https://dappradar.com/rankings). Among the dapps from these categories, we can check few basic metrics like the total number of daily active addresses, social media engagement, ongoing projects and so on. Additionally, checking the number of users that are common between an app and other apps of same and different categories will help divide the total user base by their degree of interest in the product and can also provide an entrypoint for understanding user behavior.For example, a DeFi user may not be all too interested in an open world game or a [secure chat application](https://github.com/njofce/zk-chat); a simple user may not find it necessary to transact through a privacy-friendly zero-knowledge applications like tornado-cash or zcash. However, a game that uses NFTs can share large chunk of user base with that of a marketplace dapp. 
 
 ## Let's take ICON for example
@@ -60,7 +60,7 @@ User addresses that transacted with the contract addresses given below were used
 
 So far we've talked about the way groups inside a community are clustered around the set of products they are interested in and how incorporating it to one's study can help a developer find the right product-market fit. 
 
-## Why more connectedness is useful and sometimes necessary ?
+## Why more connectedness is sometimes necessary ?
 With that being said, it should also be noted that if these user group clusters are separated so as to appear like separate silos of users on their own, the total value that the blockchain can extract from its community decreases. Having siloed user groups is equivalent to having a small community which developers can base their apps upon and as such is prone to scalability challenges. For a [two-sided platform](https://hbr.org/2019/01/why-some-platforms-thrive-and-others-dont) like blockchain that facilitates interaction between developers and users, this issue can be remarkable because it affects the network effect which the platform heavily relies upon. In other words, small userbase means developers are less attracted to build on platform; this in turn means less utility driven products that users can use which in turn alienates even more users to create an even smaller userbase. In such situation, the case made by blockchain interoperability to link blockchains and bring communities with similar interests together also makes sense.
 
 
