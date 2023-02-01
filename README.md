@@ -3,4 +3,4 @@ Contents
 clusters.md - how user groups inside a community are clustered
 
 
-<img src="https://poorlydrawnlines.com/wp-content/uploads/2023/01/Interviewing_Bird.png" alt="drawing" width="400" height="300"/>
+<img src="https://poorlydrawnlines.com/wp-content/uploads/2023/01/Interviewing_Bird.png" alt="drawing" width="800" height="600"/>
