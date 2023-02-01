@@ -44,7 +44,6 @@ User addresses that transacted with the contract addresses given below were used
 |    | cxcb455f26a2c01c686fa7f30e1e3661642dd53c0d  | Omm Lending Pool   |
 |    | cx841f29ec6ce98b527d49a275e87d427627f1afe5  | OMM Delegation   |
 |    | cxeaff5a10cb72bf85965b8b4af3e708ab772b7921  | Boosted OMM Token   |
-|    | cxa6e4587bad1d2bb4e9098ea9c19b8781b70c2ad5  | OptimusStrategyAutoStakeOmm   |
 |    | cx8190de91c8831f382dcabdbc87968448380c4838  | Omm Governance Manager   |
 |    | cx015c7f8884d43519aa2bcf634140bd7328730cb6  | Omm Staked Lp   |
 | ICONBridge   | cxcef70e92b89f2d8191a0582de966280358713c32        | BTP TokenService       |
