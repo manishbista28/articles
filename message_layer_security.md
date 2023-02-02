@@ -1,1 +1,0 @@
-# Does blockchain need forward secrecy and post compromise security ?
