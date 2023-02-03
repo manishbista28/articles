@@ -1,5 +1,3 @@
-## Draft
-
 ## Encrypted Messages in Bulletin Board
 Advances in privacy and scaling solutions makes wider adoption of blockchain technology much more realizable. With strong security guarantees backed by well founded mathematics, you will be able to exchange secure messages through blockchain. You will, as always, have to be careful with handling private keys, much like you have been with passwords; there will also be better solutions to make key-management easier and more fool-proof. 
 
