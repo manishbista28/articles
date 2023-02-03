@@ -8,6 +8,7 @@ Yet this promise of being able to make secure message is not always convenient t
 4. Codes have bugs and vulnerabilities. Incentive to not share the knowledge of vulnerabilities could outweigh the incentive to share. 
 5. Advances in cryptography and computational efficiency (e.g. quantum computing) could catchup in future. What you share now will be collected, stored and has the potential to be replayed and misused in future.
 6. Your encryption keys are a single point of failure if all your messages are encrypted with it. Being able to extract the key for a single message will make it possible to decrypt every other messages -- including those shared up until that point and those to be shared in future. 
+
 Assumption made about the adversary are fairly practical i.e. he has access to computational resource and public content like encrypted messages, open source code and knowledge of vulnerabilities and technologies.
 
 Comparatively the end-to-end encrypted messaging applications we have been using sound much more reliable. Some might even be okay with non e2e messaging compared to the points above; at least our messages are not exposed for the whole world to see plus the ones who handle them have the incentive to keep them as secure as possible. So what can we learn from e2e messaging applications so that exchanging messages through blockchain is secure and reliable ?
