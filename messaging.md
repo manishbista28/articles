@@ -19,10 +19,8 @@ Before we answer what we can learn from e2e messaging apps, lets answer why even
 
 ## How Signal does it
 Signal's messaging protocol requires clients to use different keys to encrypt each successive message. This way even if some key gets known and the corresponding message gets decrypted, the rest of the messages sent so far and to be sent in future will still be obscure. These features are called Forward Secrecy and Post Compromise Security, and is made possible through Double Ratchet algorithm. The algorithm has been battle tested with more than a decade of use and other e2e messaging apps also make use of it because of its reliability. It's modular enough to make upgrades to the cryptographic primitives it uses without breaking the protocol. Because of this flexibility, there have been studies to make the algorithm post quantum secure.
-However, Signal Protocol also has some downsides. They are ......
 
-
- Under the same assumptions as above and with this algorithm, many of the problems listed are alleviated in the following ways.
+Under the same assumptions as above and with this algorithm, many of the problems listed are alleviated in the following ways.
 1. --
 2. --
 3. Knowledge of encryption key that a passive observer has will not be useful for other messages.
@@ -31,4 +29,6 @@ However, Signal Protocol also has some downsides. They are ......
 
 
 ## Additional Usecase
-The key refreshing mechanism is also helpful when the implementation itself requires it. For example, group communications are based on establishing a shared secret key and using that key to encrypt and decrypt group messages. When there is a change in group member, the shared secret has to be refreshed to ensure that the message exchanged is now visible to exactly the current members of the group.
+The key refreshing mechanism is also helpful when the implementation itself requires it. For example, group communications are based on establishing a shared secret key and using that key to encrypt and decrypt group messages. When there is a change in group member, the shared secret has to be refreshed to ensure that the message exchanged is now visible to exactly the current members of the group. This necessity to update shared key upon group membership changes can also be integrated.
+
+In conclusion, future decentralized applications are likely to require robust mechanisms of interaction between parties involved. The inherent nature of blockchain raises concerns around its reliability, which can be addressed by drawing practices from applications which we have already known to trust.
