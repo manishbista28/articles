@@ -29,22 +29,22 @@ An obvious answer to the need for a product to be tied to blockchain is to go th
 
 ### Integrated Products
 Besides the standalone primary usecase mentioned above, secure messaging is useful as a plugin to more complex dapps. For example, it can be used in on-chain multiplayer games for private group chats or to securely log user interactions; it can be used with social dapps built on exclusivity where sharing content with only one's following could be desirable; it can be used with reward based dapps where only users with necessary credentials can decrypt the content and claim reward and so on.
-
+TODO++++
 
 With this, we've learnt that the value of secure messaging is better understood if we consider it as a small integral dapp that fits in with other products and benefits the ecosystem.
 
 
 ## How Signal does it
-Now that we've addressed the value of secure messaging, lets examine what we can learn from well established web2 products about how to implement reliable secure messaging. In this context, we'll consider Signal application because almost every other e2e messaging apps are in some ways derived from it.
-Signal's messaging protocol requires clients to use different keys to encrypt each successive message. This way even if some key gets known and the corresponding message gets decrypted, the rest of the messages sent so far and to be sent in future will still be obscure. These features are called Forward Secrecy and Post Compromise Security, and is made possible through Double Ratchet algorithm. The algorithm has been battle tested with more than a decade of use and other e2e messaging apps also make use of it because of its reliability. It's modular enough to make upgrades to the cryptographic primitives it uses without breaking the protocol. Because of this flexibility, there have been studies to make the algorithm post quantum secure.
+Now, lets examine what we can learn from e2e messaging apps by considering Signal protocol. The protocol assumes a trustless server which stores encrypted user entries and relays encrypted messages between clients. 
 
-Under the same assumptions as above and with this algorithm, many of the problems listed are alleviated in the following ways.
-- Knowledge of encryption key that a passive observer has will not be useful for other messages.
-- Modular and post quantum secure approaches are available.
-- Point of failure is now distributed among multiple keys.
+### Asynchronous Exchage of Keys
+Signal uses X3DH protocol to perform a two-way handshake between clients. The benefit of this approach compared to 3-way handshake commonly used by TLS is that both of the parties do not need to be online at the same time to establish shared key used for exchanging messages. 
 
+### Refresh Encryption Keys Periodically
+One of the main innovations of the protocol is the Double Ratchet Algorithm, which provides an efficient way to periodically update keys used to encrypt messages. Refreshing keys is meant to ensure that should some adversary gain access to the keys used now, he won't be able to use the same key to decrypt different set of messages encrypted with different set of keys. Such features are called Forward Secrecy and Post Compromise Security.
 
-## Additional Usecase
-The key refreshing mechanism is also helpful when the implementation itself requires it. For example, group communications are based on establishing a shared secret key and using that key to encrypt and decrypt group messages. When there is a change in group member, the shared secret has to be refreshed to ensure that the message exchanged is now visible to exactly the current members of the group. This necessity to update shared key upon group membership changes can also be integrated.
+### Private Groups
+Signal also specifies how its peer-to-peer messaging service can be extended to private group messages. 
+
 
 In conclusion, future decentralized applications are likely to require robust mechanisms of interaction between parties involved. The inherent nature of blockchain raises concerns around its reliability, which can be addressed by drawing practices from applications which we have already known to trust.
