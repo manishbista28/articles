@@ -29,7 +29,10 @@ An obvious answer to the need for a product to be tied to blockchain is to go th
 
 ### Integrated Products
 Besides the standalone primary usecase mentioned above, secure messaging is useful as a plugin to more complex dapps. For example, it can be used in on-chain multiplayer games for private group chats or to securely log user interactions; it can be used with social dapps built on exclusivity where sharing content with only one's following could be desirable; it can be used with reward based dapps where only users with necessary credentials can decrypt the content and claim reward and so on.
+
 TODO++++
+- how XMTP and Farcaster have integrated their secure messaging to larger ecosystem
+- etc
 
 With this, we've learnt that the value of secure messaging is better understood if we consider it as a small integral dapp that fits in with other products and benefits the ecosystem.
 
@@ -45,6 +48,12 @@ One of the main innovations of the protocol is the Double Ratchet Algorithm, whi
 
 ### Private Groups
 Signal also specifies how its peer-to-peer messaging service can be extended to private group messages. 
+
+### Modular Design
+The algorithm has been battle tested for more than a decade and other e2e messaging apps also derive from it because of its reliability. It's modular enough to make upgrades to the cryptographic primitives it uses without breaking the protocol. Because of this flexibility, there have been studies to make the algorithm post quantum secure.
+
+
+## How was this helpful ?
 
 
 In conclusion, future decentralized applications are likely to require robust mechanisms of interaction between parties involved. The inherent nature of blockchain raises concerns around its reliability, which can be addressed by drawing practices from applications which we have already known to trust.
