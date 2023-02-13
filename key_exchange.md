@@ -26,3 +26,11 @@ Attribte Based Credential
 Account Abstraction
 Token gated
 Zero Knowledge Proofs 
+
+## Existing Implementations
+AppliedZK, XMTP, Farcaster, LensProtocol
+
+## Links
+https://signal.org/blog/simplifying-otr-deniability/
+https://signal.org/docs/specifications/x3dh/
+https://github.com/xmtp/litepaper#4-secure-web3-messaging-with-blockchain-accounts
