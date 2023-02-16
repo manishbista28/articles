@@ -4,7 +4,7 @@ Lets begin by providing a bit more detail on the above mentioned parameters that
 
 1. Message Type and Throughput
 
-    The reason message exchange is done with symmetric encryption is because it incurs less computational cost for messages of arbitrary length compared to doing it with asymmetric encryption. This makes key-agreement protocols attractive for systems requiring larger throughput. Encrypting message with a shared key is useful under private group messaging with several participants. Instead of sending a message to each participant by encrypting with their public key, a single message can be sent that is readable by all. 
+    The reason message exchange is done with symmetric encryption is because it incurs less computational cost for messages of arbitrary length compared to doing it with asymmetric encryption. This makes key-agreement protocols attractive for systems requiring larger throughput. Encrypting message with a shared key is useful under private group messaging with several participants or under multi-device per user setting. Instead of sending a message to each participant by encrypting with their public key, a single message can be sent that is readable by all. 
 
 2. Security Requirements
 
@@ -27,22 +27,22 @@ Lets begin by providing a bit more detail on the above mentioned parameters that
 
 Next we'll be taking a closer look on some of these protocols.
 
-## X3DH
-[X3DH](https://signal.org/docs/specifications/x3dh/) (or Extended Triple Diffie Hellman) protocol is a key agreement protocol used by secure messaging applications like Signal. It offers forward secrecy, deniability and is designed to work under asynchronous settings. In the following section, we progress from basic key-agreement protocol up to X3DH protocol describing the benefits of improvements in each step.
+## Extended Triple Diffie Hellman (X3DH)
+[X3DH](https://signal.org/docs/specifications/x3dh/) protocol is a key agreement protocol used by secure messaging applications like Signal. It offers forward secrecy, deniability and is designed to work under asynchronous settings. In the following section, we progress from basic key-agreement protocol up to X3DH protocol describing the benefits of improvements in each step.
 
 A basic Diffie-Hellman (DH) key-agreement protocol involves sender and receiver using their identity keys to calculate a shared key. A slight variation uses signed ephemeral key to calculate shared key. In the following diagrams, *A* and *B* are identity keys and *a* and *b* are ephemeral keys for a couple of users. The first (left) diagram shows ephemeral keys (a and b) signed by identity keys (A and B) and used for key-agreement. The benefit of using ephemeral key, which is renewed between protocol runs, is that it enables forward secrecy and provides protection against security breach if identity key was compromised.
 
 An improvement to this protocol is shown on the next (right) diagram where instead of using identity key to sign respective ephemeral keys, three Diffie-Hellman shared keys are calculated and then combined to form a final shared key. This latter approach improves [deniability](https://signal.org/blog/simplifying-otr-deniability) and reduces payload size.
 
-<img src="https://signal.org/blog/images/otr-current.png" alt="drawing" width=300 height=200/>
-<img src="https://signal.org/blog/images/otr-simplified.png" alt="drawing" width=300 height=200/>
+<img src="https://signal.org/blog/images/otr-current.png" alt="otr-current" width=300 height=200/>
+<img src="https://signal.org/blog/images/otr-simplified.png" alt="otr-simplified" width=300 height=200/>
 
 The description so far is for synchronous messaging, where both endpoints are online at the same time. For **asynchronous** settings, a user publishes a pre-key bundle, which the other user uses to establish shared key with the first user. For example, Bob publishes pre-key bundle which consists of the following.
  - Bob's identity key IK<sub>B</sub> generated once
  - Bob's signed prekey SPK<sub>B</sub> and prekey signature Sig(IK<sub>B</sub>, Encode(SPK<sub>B</sub>)) renewed periodically (weeks, months)
  - A set of Bob's one-time prekeys (OPKB<sub>1</sub>, OPKB<sub>2</sub>, OPKB<sub>3</sub>, ...) with each one for a separate protocol run
 
-The use of ephemeral and one-time prekeys help enforce forward secrecy and avoid protocol replay. Alice fetches the pre-key bundle, uses her identity key, generates a new ephemeral key and calculates a shared key with the steps given below.
+The use of ephemeral and one-time prekeys help enforce forward secrecy and avoid protocol replay. Alice fetches the pre-key bundle, uses her identity key, generates a new ephemeral key and calculates a shared key with the steps given below. Here *DH(PK1, PK2)* represents Elliptic Curve Diffie Hellman Function whose output is a shared key derived from key-pair *PK1* and public-key *PK2*, *SK* is the combined shared key used for message exchange and *KDF* is Key-Derivation function.
 
 | CalculationSteps | Keys | KeyDescription |
 | ---- | ----------- | --- |
@@ -52,16 +52,34 @@ The use of ephemeral and one-time prekeys help enforce forward secrecy and avoid
 | DH4 = DH(EK<sub>A</sub>, OPK<sub>B</sub>) | SPK<sub>B</sub> | Bob's Signed Prekey  |
 | SK = KDF(DH1 \|\| DH2 \|\| DH3 \|\| DH4) | OPK<sub>B</sub> | Bob's One Time Prekey |
 
-Here *DH(PK1, PK2)* represents Elliptic Curve Diffie Hellman Function whose output is a shared key derived from key-pair *PK1* and public-key *PK2* and *SK* is the combined shared key used for message exchange.
-
-Afterwards, Alice provides Bob with a message containing her identity and ephemeral keys, Bob's prekey used and additional information encrypted with shared key. Bob receives the message and will be able to calculate shared key to communicate with Alice further.
-<!-- <img src="https://signal.org/docs/specifications/x3dh/X3DH.png" alt="drawing" width=300 height=300/> -->
-
-The protocol is widely used for e2e encrypted messaging and has found its use in [web3 applications](https://github.com/xmtp/litepaper#4-secure-web3-messaging-with-blockchain-accounts) as well where it has been used to exchange textual message, gameplay interaction signals, computational results and secrets, multimedia files, NFT metadata, application assets, etc.
+<!-- <img src="https://signal.org/docs/specifications/x3dh/X3DH.png" alt="x3dh" width=300 height=300/> -->
+Afterwards, Alice provides Bob with a message containing her identity and ephemeral keys, Bob's prekey used and additional information encrypted with shared key. Bob receives the message and will be able to calculate shared key to communicate with Alice further. The protocol is widely used for e2e encrypted messaging and has found its use in [web3 applications](https://github.com/xmtp/litepaper#4-secure-web3-messaging-with-blockchain-accounts) as well where it has been used to exchange textual message, gameplay interaction signals, computational results and secrets, multimedia files, NFT metadata, application assets, etc.
 
 
-## MLS
-[MLS](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html) (or Messaging Layer Security) Protocol that provides efficient asynchronous group key establishment with forward secrecy and post-compromise security for groups in size ranging from two to thousands.
+## Messaging Layer Security (MLS)
+Secure group communication means users should be able to communicate such that the message is readable only to a member of the group. Despite its widespread prevalance in messaging applications, a fully secure, efficient and standard method of private group communication is [still in works](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/). The difficulty lies primarly with an efficient way of managing groups (i.e. initial key exchange, addition and removal of users, update to existing user keys) in an end-to-end encrypted messaging protocol. An explanation of some known approaches given below will help establish the point.
+
+1. Pairwise Channels
+
+    Pairwise Channel method means each user forms a pair with every other user and establishes a unique secure channel. A message dropped to the group will have to be separately channeled to every partipant. Assume a group of N users who want to participate in a group chat. Each user will provide his public keys to every other user which means it takes N<sup>2</sup> messages in total to exchange all keys. To send a group message, a user will send separate encrypted copies of the same message to all members such that each message can only be read by a specific user, thus taking N rounds for a single message. Now if a user needs to be added, each of the existing users will have to provide their keys to the new user and also obtain the new user's keys taking 2N rounds. For an existing member who wants to update his keys, the broadcast will take N rounds. Finally if a user is removed from the group, the entire key exchange has to be redone taking N<sup>2</sup> rounds. Despite being the most secure way of group communication, the protocol is the least scalable. The communication overhead of maintaining secure keys can deny the ability to exchange application messages in a large group.
+
+<!-- <img src="https://i0.wp.com/blog.trailofbits.com/wp-content/uploads/2019/08/image10-1.png?resize=690%2C590&ssl=1" alt="pairwise" width=300 height=200/> -->
+
+
+2. Sender Keys
+    Instead of forming a separate channel to every other member, a user will form a single channel by passing the same symmetric sender key to each of them. Now if a user wants to send a message, he will be able to boardcast a single message encrypted with the sender key. The overhead with this approach lies mainly with the key-exchange which has to be done initially and every time a user is removed from the group. During key-exchange, a user's sender key will have to be securely provided to every other user which can only be done by encrypting with the recepient's respective publick keys. As such the key-exchange step still takes N<sup>2</sup> rounds in total considering all participants. The efficiency gained with this approach is realized during exchanging application messages only. This approach to group messaging is the one followed by popular group messaging applications like Signal and Whatsapp.
+
+<!-- <img src="https://i0.wp.com/blog.trailofbits.com/wp-content/uploads/2019/08/image6-2.png?resize=690%2C716&ssl=1" alt="senderkeys" width=300 height=200/> -->
+
+
+3. Trees
+    In this approach, keys corresponding to users form leaf nodes of a binary tree. These keys are recursively aggregated, and each intermediate node of the tree jolds a key-pair, with the root node holding the final shared key of the group. This root key pair is used with key derivation function to generate encryption secret that can be used by applications to exchange messages. The benefit of this approach is that it takes around log(N) rounds to add a user while it can take log(N) rounds on average to N rounds at worst case to remove a user from the group. The difficulty with this approach is the complexity of protocol itself. When a user is added/removed or a user updates his key-pair, the aggregate encryption secret changes, thus keeping private communication visible only to group memebers. 
+    
+    Instead of using the common encryption secret directly to exchange message amongst all users, this approach can be extended by pairing it with more secure messaging protocols to enable more robust security guarantees. For example, [MLS protocol](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol) uses encryption secret as a seed to extenstions that make use of cryptographic ratchets (similar to Signal's Double Ratchet alogrithm) to exchange application message. Such extensions mostly depend on the usecase. As such tree based approaches provide a scalable way to efficiently and securely configure private groups and are extensible to attain necessary requirements based on applications.
+
+<!-- <img src="https://i0.wp.com/blog.trailofbits.com/wp-content/uploads/2019/08/image8.png?resize=690%2C466&ssl=1" alt="senderkeys" width=300 height=200 left=300/> -->
+[MLS] (or Messaging Layer Security) Protocol defines steps to establish a shared secret amongst a group of participants for private group communication. The protocol's core functionality is continuous group authenticated key exchange(AKE). Authenticated key exchange means each participant can verify the identity of the other participants and they agree on a common secret value; while continuous group AKE means the number of participants in the group can change over time.
+
 
 ## Authentication with ABC, NFT and ZKP
 We've, so far, learnt how parties can agree upon a key to to securely communicate with each other. But how do these parties identify and authenticate each other in the first place. Authentication mechanism itself is dependent upon wide range of factors like privacy sought, whether you're authenticating based on identity or attribute, whether you're authenticating a specific individual or anyone possessing some trait.  
