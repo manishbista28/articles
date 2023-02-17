@@ -22,12 +22,12 @@ Lets begin by providing a bit more detail on the above mentioned parameters that
 
 5. Ease of Integration
 
-    This feature is loosely connected to key-agreement protocol, and instead aligns more with authentication mechanisms. The term *integration* here refers to more than technical compatibilty, which was already covered in the point above. Instead, here, we intend to discuss how a suitable protocol helps aid the communication system to more conveniently integrate with other applications and end-users. For example, lets consider a system where if you needed to run a key-agreement protocol, you'd need to be physically together, or consider a system where key-agreements can be run but only with the users which are already on your phone's contact list. Such designs make it [difficult to scale](https://signal.org/blog/contact-discovery/) the application to a larger userbase which in turn makes the application itself less appealing. Had authentication mechanisms been token gated such that holders of some NFT could authenticate and participate in the communication, then we'd be importing social value derived elsewhere in the ecosystem directly onto our system. In short, technical design should be wary of and facilitate inflow of business value.
+    This feature is loosely connected to key-agreement protocol, and instead aligns more with authentication mechanisms. The term *integration* here refers to more than technical compatibilty, which was already covered in the point above. Instead, here, we intend to discuss how a suitable protocol helps aid the communication system to more conveniently integrate with other applications and end-users. For example, lets consider a system where if you needed to run a key-agreement protocol, you'd need to be physically together, or consider a system where key-agreements can be run but only with the users which are already on your phone's contact list. Such designs make it [difficult to scale](https://signal.org/blog/contact-discovery/) the application to a larger userbase which in turn makes the application itself less appealing to new and existing users. Had authentication mechanisms been token gated such that holders of some NFT could authenticate and participate in the communication, then we'd be importing social value derived elsewhere in the ecosystem directly onto our system. In short, technical design should be wary of and facilitate inflow of business value.
 
 
 Next we'll be taking a closer look on some of these protocols.
 
-## Extended Triple Diffie Hellman (X3DH)
+## Extended Triple Diffie Hellman (X3DH) Protocol
 [X3DH](https://signal.org/docs/specifications/x3dh/) protocol is a key agreement protocol used by secure messaging applications like Signal. It offers forward secrecy, deniability and is designed to work under asynchronous settings. In the following section, we progress from basic key-agreement protocol up to X3DH protocol describing the benefits of improvements in each step.
 
 A basic Diffie-Hellman (DH) key-agreement protocol involves sender and receiver using their identity keys to calculate a shared key. A slight variation uses signed ephemeral key to calculate shared key. In the following diagrams, *A* and *B* are identity keys and *a* and *b* are ephemeral keys for a couple of users. The first (left) diagram shows ephemeral keys (a and b) signed by identity keys (A and B) and used for key-agreement. The benefit of using ephemeral key, which is renewed between protocol runs, is that it enables forward secrecy and provides protection against security breach if identity key was compromised.
@@ -56,8 +56,8 @@ The use of ephemeral and one-time prekeys help enforce forward secrecy and avoid
 Afterwards, Alice provides Bob with a message containing her identity and ephemeral keys, Bob's prekey used and additional information encrypted with shared key. Bob receives the message and will be able to calculate shared key to communicate with Alice further. The protocol is widely used for e2e encrypted messaging and has found its use in [web3 applications](https://github.com/xmtp/litepaper#4-secure-web3-messaging-with-blockchain-accounts) as well where it has been used to exchange textual message, gameplay interaction signals, computational results and secrets, multimedia files, NFT metadata, application assets, etc.
 
 
-## Messaging Layer Security (MLS)
-Secure group communication means users should be able to communicate such that the message is readable only to a member of the group. Despite its widespread prevalance in messaging applications, a fully secure, efficient and standard method of private group communication is [still in works](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/). The difficulty lies primarly with an efficient way of managing groups (i.e. initial key exchange, addition and removal of users, update to existing user keys) in an end-to-end encrypted messaging protocol. An explanation of some known approaches given below will help establish the point.
+## Private Group Messaging Protocols
+Secure group communication means users should be able to communicate such that the message is readable only to a member of the group. Despite its widespread prevalance in messaging applications, a fully secure, efficient and standard method of private group communication is [still in works](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol/). The difficulty lies primarly with implementing an efficient way of managing groups (i.e. initial key exchange, addition and removal of users, update to existing user keys) in an end-to-end encrypted messaging protocol. An explanation of some known approaches given below will help establish the point.
 
 1. Pairwise Channels
 
@@ -67,29 +67,33 @@ Secure group communication means users should be able to communicate such that t
 
 
 2. Sender Keys
+
     Instead of forming a separate channel to every other member, a user will form a single channel by passing the same symmetric sender key to each of them. Now if a user wants to send a message, he will be able to boardcast a single message encrypted with the sender key. The overhead with this approach lies mainly with the key-exchange which has to be done initially and every time a user is removed from the group. During key-exchange, a user's sender key will have to be securely provided to every other user which can only be done by encrypting with the recepient's respective publick keys. As such the key-exchange step still takes N<sup>2</sup> rounds in total considering all participants. The efficiency gained with this approach is realized during exchanging application messages only. This approach to group messaging is the one followed by popular group messaging applications like Signal and Whatsapp.
 
 <!-- <img src="https://i0.wp.com/blog.trailofbits.com/wp-content/uploads/2019/08/image6-2.png?resize=690%2C716&ssl=1" alt="senderkeys" width=300 height=200/> -->
 
 
 3. Trees
-    In this approach, keys corresponding to users form leaf nodes of a binary tree. These keys are recursively aggregated, and each intermediate node of the tree jolds a key-pair, with the root node holding the final shared key of the group. This root key pair is used with key derivation function to generate encryption secret that can be used by applications to exchange messages. The benefit of this approach is that it takes around log(N) rounds to add a user while it can take log(N) rounds on average to N rounds at worst case to remove a user from the group. The difficulty with this approach is the complexity of protocol itself. When a user is added/removed or a user updates his key-pair, the aggregate encryption secret changes, thus keeping private communication visible only to group memebers. 
-    
-    Instead of using the common encryption secret directly to exchange message amongst all users, this approach can be extended by pairing it with more secure messaging protocols to enable more robust security guarantees. For example, [MLS protocol](https://datatracker.ietf.org/doc/draft-ietf-mls-protocol) uses encryption secret as a seed to extenstions that make use of cryptographic ratchets (similar to Signal's Double Ratchet alogrithm) to exchange application message. Such extensions mostly depend on the usecase. As such tree based approaches provide a scalable way to efficiently and securely configure private groups and are extensible to attain necessary requirements based on applications.
+
+    Tree based solutions like [Asynchronous Ratcheting Trees](https://eprint.iacr.org/2017/666.pdf), [TreeKEM](https://hal.inria.fr/hal-02425247) and [Ratchet Tree](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html) protocols aim to reduce the number of necessary updates during key-exchange, which we saw take O(N<sup>2</sup>) steps during initial key-exchange or when a member of a group was removed. Though variants of tree based solutions have some differences amongst them, the primary approach has been to arrange the key-value pairs for each of the users on leaf nodes of a binary tree; the intermediate nodes aggregate nodes below them recursively until we reach the root node, which holds the group secret used to derive shared encryption key for securely exchanging messages within the group. Consequently, when a user has to be removed from the group, only some select nodes, totalling to O(log N) in average and O(N) in worst case, need to be updated.
+
+    The solution is very useful especially when the size of groups tend to be very large and frequent change in group members' keys is very likely making it a scalable approach. We can also reason that an efficient group management solution is eseential for a private group messaging system to support integral security guarantees. The ability to add or remove groups or to update existing users' secrets is a fundamental necessity and any solution that can not achieve it efficiently can be susceptible to attacks from bad actors given that there is sufficient incentive to do so. As an added benefit, the shared secret derived from root node can be paired with other approach to provide different security guarantees based on requirement. For example, the shared secret, itself, could be used to exchange all messages by all members making key management easier; the shared secret could be used as a seed to ratcheting protocols that derive and refresh message encryption key periodically, thus, providing added security guarantees.
+
+    As such tree solutions are group management solutions which understand that the need for scalable group management is more of a basic security requirement than a nice-to-have feature. Usecases that do not guarantee that they will not scale and as such won't need efficient solution or do not have other safeguards in place to thwart attacks should consider worst case situations early in their design process.
 
 <!-- <img src="https://i0.wp.com/blog.trailofbits.com/wp-content/uploads/2019/08/image8.png?resize=690%2C466&ssl=1" alt="senderkeys" width=300 height=200 left=300/> -->
-[MLS] (or Messaging Layer Security) Protocol defines steps to establish a shared secret amongst a group of participants for private group communication. The protocol's core functionality is continuous group authenticated key exchange(AKE). Authenticated key exchange means each participant can verify the identity of the other participants and they agree on a common secret value; while continuous group AKE means the number of participants in the group can change over time.
+[MLS Protocol](https://messaginglayersecurity.rocks/mls-protocol/draft-ietf-mls-protocol.html) defines a standard for private group messaging which defines the following:
+- Ratchet Tree as core alogirthm to represent and manage group 
+- Extensions to generate message encryption keys, with secret trees to be specific
+- Message Types (metadata, handshake and application messages) and their formats
+- Control flow for group management, e.g. how changes to group members' list are proposed and commited, how a user can either request being added or can be offered to get added, how authentication credentials' type (or version) and content are agreed upon, etc
+- Enablers of security requirements
+
+MLS Protocol, in itself, is vast enough to require a separate discussion to thoroughly understands its ins and outs. For now, we'll mention few existing resources that cover aspects of it, which are:
+- [MLS Security Documents](https://messaginglayersecurity.rocks)
+- [Better Encrypted Group Chat by TrailOfBits](https://blog.trailofbits.com/2019/08/06/better-encrypted-group-chat)
+- [Secure Messaging Apps and Group Protocols by QuarksLab](https://blog.quarkslab.com/secure-messaging-apps-and-group-protocols-part-2.html)
 
 
-## Authentication with ABC, NFT and ZKP
-We've, so far, learnt how parties can agree upon a key to to securely communicate with each other. But how do these parties identify and authenticate each other in the first place. Authentication mechanism itself is dependent upon wide range of factors like privacy sought, whether you're authenticating based on identity or attribute, whether you're authenticating a specific individual or anyone possessing some trait.  
-
-1. Attribte Based Credential
-    A user authenticates by providing proof of having an attribute (e.g. belonging to a group, of certain age) to the verifier. Attributes are generally unlinkable, which means two users submitting proof of an attribute (say, of age above 21) can not be distinguished based on the attribute alone. Such authentication mechanisms are applicable when you want to invite a large group of users, where anonymity is a concern, where the attributes themselves can be transferrable, revocable, obtainable. 
-    It is used is Signal application where a user proves in zero knowledge that he is part of a private group.
-
-3. Token gated
-    Here, holders of a token (like NFTs) can prove their ownership and as such are able to authenticate. LensProtocol, BAYC
-
-
-
+## Summary
+Picking the right key-agreement protocol depends very much on the usecase you're trying to implement it on and what features it requires. Paired with how authentication mechanism, key-agreement forms the initial gateway to onboard the intended user(s) from a pool of potentially malicious actor, and only afterwards can we securely and efficiently build applications on top.
