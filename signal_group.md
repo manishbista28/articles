@@ -1,32 +1,42 @@
 
-A private group messaging service should have
-- ability to add and remove users securely
-- exchange message visible only to users within the group
-- outside members or the server should not be able to draw information from group messages, which can include
-which group the user is in, who else is there, is it a group message or a peer-to-peer message
+A private group messaging system enables members of a secret group to securely communicate with each other. This includes the ability to create, then add or remove user(s) to a private group, exchange message visible only to the members and hide as much information as well as metadata relating to any group activity from the outside. 
 
-Let's see how Signal does it
+## Background
 
-| FrontEnd | Backend |
-| -------- | ------- |
-| GroupCreation: A user creates a group | Creates group visible only to the user and its members |
-| GroupInvitation: A user invites another user to the group | Share GroupMasterKey securely |
-| Inivited user can now see group information | Download and decrypt with groupMasterKey |
-| SecureMessageExchange | one to many message exchanges |
-| RemoveUser | GroupKey is not updated |
+### 1. Privacy Preserving Attribute Based Credentials
 
-Let's establish background knowledge of related terms
+Identity of a user is linked to a set of *attributes*. For example, a user could have age, marital status, phone-number as attributes. A user is able to authenticate for possessing (being an owner of) some kind of identity. For example, a user could authenticate with a voter card, which certifies his eligibility by ensuring his attribute (say, age & citizenship) assume acceptable values. Here, the voter card is called a *credential*, which is issued and signed by an authority, certifies the user (or holder) of having necessary attributes and can be validated by a verifying authority when necessary. As such, a credential is a set of attributes digitally issued by an *issuer* and later verified of its authenticity & validity by a *verifier*. 
 
-Background Knowledge Topics
+A user can assume different identities and as such a different set of attributes in different contexts. We need privacy preserving property to ensure that only necessary information is presented to the verifier is not provided through a credential and also to avoid credential presentation by the user on different places from being linked together. This anonymity and multi-show unlinkability is safeguarded by technologies such as zero-knowledge proofs. 
 
-- ElGammal Encryption and its Homomorphic property
-- Schnorr Identification Proofs
-- Multi-show unlinkability
-- Key-Exchange mechanisms and pre-existing secure channels
-- KVAC
-- Algebraic MACs, credentials (t, U, V)
-- Anonymous credential systems (Issue, Verify, Revoke, credential, attributes)
+Further reading: [Concepts Around Privacy-Preserving Attribute-Based Credentials](https://link.springer.com/chapter/10.1007/978-3-642-55137-6_4)
 
+### 2. Keyed-Verification Anonymous Credentials (KVAC) and Algebraic MAC
+Credentials like digital signature signed by an authorized entity (issuer) makes it publicy verifiable i.e. any user with access to issuer's public-key will be able to verify that the credential is valid. In cases where the issuer and the verifier is the same entity (or hold a shared secret), then symmetric key primitives can be used to construct *keyed-verification credentials* through the application of [Message Authentication Codes](https://en.wikipedia.org/wiki/Message_authentication_code) (MAC) which makes these schemes more efficient than their public-key counterparts.
+
+A MAC is an encrypted checksum generated on the underlying message and tagged along with it to ensure integrity and authenticity of the transferred message. It is computed using a secret value, which is shared between sender and recepient(s), and the message to be transferred. The MAC generated and sent by the sender is received and compared with a freshly generated MAC calculated using the same message and shared secret. In order to integrate with zero-knowledge proofs (needed to construct anonymous credentials), we require an algebraic MAC,which is constructed using group operations.
+
+A construction of algebraic MAC involves the following steps:
+
+- KeyGen: choose random scalars as shared secret i.e. sk = (x0, x1)
+- MAC(sk, m): choose random generator point U, then tag = (U, U<sup>x0 + x1 * m</sup>). Here, 'm' is the message which is converted to a group element.
+- Verify(sk, tag, m): recalculate new tag using U, sk and m. Verification passes if new tag equals transferred tag.
+
+Further reading: [Algebraic MACs and Keyed-Verification Anonymous Credentials](https://eprint.iacr.org/2013/516)
+
+### 3. Sigma Protocol
+Sigma Protocol enables proving knowledge of some secret value x such that g<sup>x</sup> = y without discolsing the value of x.
+It consists of the following steps in non-interactive setting:
+- Commitment: Prover generates a random value r and creates a commitment t = g <sup>r</sup>
+- Challenge: Prover hashes g, t and y to get the challenge c = Hash(g, y, t)
+- Response: Prover creates response to the challenge as s = r + c * x. The prover sends (c, s) to the verifier. 
+- Reconstruct Commitment: Verifier reconstructs t using the equation gˢ = y<sup>c</sup>.t. Thus t = g<sup>s</sup>y<sup>-c</sup>.
+- Reconstruct Challenge: Verifier reconstructs challenge c using c = Hash(g, y, t). If this reconstructed challenge c equals the one sent by the prover, the verifier is convinced of prover’s knowledge of x.
+
+Further reading: [Zero Knowledge Proofs with Sigma Protocols](https://medium.com/@loveshharchandani/zero-knowledge-proofs-with-sigma-protocols-91e94858a1fb)
+
+### 4. Verifiable Encryption
+### 5. Ristreetto Points
 _____________________
 
 ## Implementation Details:
