@@ -39,7 +39,14 @@ A private group messaging system enables members of a secret group to securely c
 
 4. Verifiable Encryption
 
-5. Ristreetto Points
+    With [verifiable encryption](https://link.springer.com/chapter/10.1007/3-540-44448-3_25), a user is able to prove that an encrypted message possesses a certain attribute. Message attributes can include data that needs to be hidden while issuing and/or presenting credentials. However, the issuer and verifier still needs to be able to verify that the ciphertext is well formed. This is guaranteed with verifiable encryption.
+
+5. Ristretto Groups
+
+    Signal uses Curve25519 for elliptic curve operations, which is not readily usable with ZK Proofs. We need Ristretto groups for this compatibility.
+    Excerpt from [ristretto group](https://ristretto.group/)
+    > This allows an existing Curve25519 library to implement a prime-order group with only a thin abstraction layer, and makes it possible for systems using Ed25519 signatures to be safely extended with zero-knowledge protocols, with no additional cryptographic assumptions and minimal code changes.
+
 _____________________
 
 ## Signal Private Group System
@@ -55,7 +62,7 @@ Signal's [paper](https://eprint.iacr.org/2019/1416) on private group system prov
 
     *How are AuthCredentials issued?*
 
-    A credential is a MAC on the attributes that is issued and verified by the server. To get an *AuthCredential*, a user submits his UID, the server then adds validity period of the credential as another attribute of this credential, calculates a MAC tag for these attributes along with a zero-knowledge proof that the computation was done correctly. (ZKP hides the secret server parameters used to calculate the MAC tag) The user can then fetch this credential and verify the proof to ensure the credential is valid. 
+    A credential is a MAC on the attributes that is issued and verified by the server. To get an *AuthCredential*, a user submits his UID, the server then adds validity period of the credential as another attribute of this credential, calculates a MAC tag for these attributes along with a zero-knowledge proof that the computation was done correctly. The user can then fetch this credential and verify the proof to ensure the credential is valid. 
     
     *How are ProfileKeyCredentials issued?*
 
@@ -77,18 +84,38 @@ Signal's [paper](https://eprint.iacr.org/2019/1416) on private group system prov
 
 
 4. Exchanging Messages
+
     Despite having a shared group secret, group messages are exchanged such that each user sends encrypted message to every other member of the group individually with end-to-end encryption. Having the group secret enables the sender-receiver pair to access public keys necessary to decipher messages.
 
-5. Removing users
+5. Removing users from the group
+
     Following is an excerpt from the Signal's private group [paper](https://eprint.iacr.org/2019/1416) on removing users.
    > A user who has acquired a group’s GroupMasterKey and then leaves the group (or is deleted) retains the ability to collude with the server to encrypt and decrypt group entries. In the current system a new group would have to be created, excluding the removed user(s). An automated or more sophisticated re-keying strategy could also be added as a future extension.
    
-   Difficulties of re-keying strategy has been mentioned [here](https://github.com/manishbista28/study/blob/main/key_agreement.md).
+   Some of the difficulties of re-keying strategy has also been mentioned [here](https://github.com/manishbista28/study/blob/main/key_agreement.md).
 
 ### Features
-- multi-show unlinkability; how has this been useful ?
-- blind-issuance of credentials with ZKP
-- privacy preserving with ElGammal Encryption
-- unforgeability
-- multi-attribute type (scalar,vector or multi-attribute)
-- efficient for its group elements size and type (same issuer-verifier)
+
+1. Anonymity
+
+    With blind issuance of credentials, the server will not be able to obtain and use any identifying information present in profile data like name and photo. During credential presentation, submitting encrypted ciphertexts of UID and ProfileKeys both for credential verification and record-keeping ensures raw information is not accessible to the server. Furthermore, the MAC tag values are also modified such that the server can not correlate credentials during issuance and verification to extract any information. 
+
+2. Unforgeability
+
+    Algebraic MAC tag values are constructed such that the verifier can confirm that the issued credential was not modified in any way. This ensures an adversary can not create a valid proof for a statement not satisfied by the credential he was issued.
+
+3. Multi-show Unlinkability
+
+    Multi-show unlinkability ensures that the credential you present more than once either on same or different contexts can not be linked together. The credential values (MAC tag) can be modified by a different random parameter (z in the paper) in each submissions making the values presented to the verifier different at each instances. However, the verifier can link different credential presentations if some parameters like attribute encrypted with group key is submitted. As such separate credential presentations are unlinkable unless a separate common value has been repeatedly submitted.
+
+4. Transferrability
+
+    Credentials are transferrable. A different user in possession of the credential and ciphertexts of UID and ProfileKeys can also make the presentation. This ensures users can not be censored based on the origin of presentation requests.
+
+5. Multi-attribute type
+
+    Attributes encoded on MAC can be hidden or plain text making the underlying KVAC protocol suitable for a wider range of applications.
+
+5. Efficiency
+
+    Credentials are in the order of few hundred bytes in size and take few hundred milliseconds to generate or process. 
