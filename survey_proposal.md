@@ -1,6 +1,13 @@
-## TLDR;
+## Abstract
 
-## 1. Preface
+Users are issued verifiable credential by identity providers like idemix, U-prove, polygonID issuers. This verifiable credential is issued to the user such that the issuer itself does not know what value the user has asked to be included in the credential. This is called blind issuance. The server can only know that the value satisfies certain predicate stated by the user with zero knowledge proofs. As such the user is able to embed his private details on a credential, which he can present to verifiers later. Note that this method of specifying one's own attribute values differs from the typical credential issuance process where an authorized entity issues these values to the user. Though our form of verifiable credential also supports such central authority specified attributes, we think user specified values have potential as many prominent technology do indeed use user specified values for user profile information. So it's a tried and tested convenient and scalable model of issuing softer versions of verifiable credential.
+
+So far user has in possession a verifiable credential with private attributes. This can now be used in three different forms. First, a user can selectively disclose some attribute of his credential. Second, a user can prove a statement about the attribute values in zero knowledge proof instead of directly revealing the attribute. Third, a set of users can provide attribute values to aggregator servers such that no single server can understand the user's private data yet the aggregator servers working together can compute some function on the total data provided by all users. For example, it will be possible to find average (or standard deviation) salary of people within a certain age range without ever knowing how much each individual earns. Note that with second and third approach, data requesters have little to no information about user's private data. Paired with how the verifiable credential is issued, a user's private information has been used to calculate results yet it remain hidden throughout the pipeline.
+
+Data requesters can request data that satisfy some predicate present in a verifiable credential. In return, the data providers can be rewarded for the participation. A user can create multiple different types of credentials which he can use in different ways as mentioned above. This work is different from existing ones for combining verifiable credential and private aggregation. So far works on these subjects have existed on their respective silos. Additionally, the proposition to specify one's attributes oneself to get issued a less strict version of credential is, to our knowledge, new perspective on credential issuance.
+
+
+## 1. Introduction
 
 ### 1.1  State of User Privacy
 
@@ -28,4 +35,28 @@ Secondly, not every user info has to be treated the same; some need more protect
 How do you fill a form such that only you know the filled values, yet the surveyor can rest assured that certain constraints ( like values being of specific data types or range) were satisfied ? With Zero Knowledge Proof, we can prove that the submitted values satisfy the supplied constraints and are also the same values whose encrypted form has been submitted. This method ensures that your private information is not leaked when you're not doing anything valuable using it. 
 
 ### 1.4 Processing
+
+Depending upon what is requested, a user's data can be presented in various ways. For example, requester may ask to be disclosed a set of attribute values either in clear text or in an encrypted form, requester may ask the user to prove a statement on his data using zero knowledge proof instead of revealing directly, requester may ask for only the result of an aggregation function applied to data from multiple users without having to know individual values. 
+
+### 1.5 Sharing Incentives
+
+Rewarding users for sharing information can encourage privacy friendly approach where user would want to retain full custody of their data and use it wisely. 
+
+## 2 Related Work
+
+Private Aggregation Schemes like Prio enable computation of aggregate statistic such that individual values are not revealed to any parties, not even the servers that perform the aggregation. This technology has been used by Mozilla Firefox Browser, ENPA, DivviUP
+To ensure these user submitted values are reliable, some authority issues verifiable credential to these users. This verifiable credential includes in them the attribute values whose correctness is verified later during credential presentation. 
+
+## 3. Preliminaries
+
+### 3.1 Verifiable Credential
+
+### 3.2 Zero Knowledge Proofs
+
+### 3.3 Private Aggregation
+
+## Technical Details
+
+
+## Application
 
