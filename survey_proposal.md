@@ -39,42 +39,21 @@ Verifiable credential and private aggregation are similar in that they both work
 
 Use of verifiable credential provides authentication, integrity of data, spam protection, avoiding duplicates and maintaining blacklisted requests. These features are required and helpful for private aggregation.
 
+## 2. Related Work
 
-### 1.2 Representing User Info
+- ENPA
+- DivviUP
+- Prio
+- AdScale
+- Hyperledger's Ursa, Aries
+- Evernym
 
-Different people have differing notions of privacy; what one considers sensitive info could be something publicly shared by the other. As such, it's best to let the user decide what info he is willing to share. However, it gets really inconvenient really quick if a user has to specify his choices repeatedly. For example, GDPR enforced cookie settings and how inconvenient it is to manage these preferences on every site.
-
-As a remedy, there can be tools to help automate incovenient interactions. In the above cookie settings example, a user could specify his preference once and a browser extension could have probably handled most of these settings on his behalf. A different example is the use of CAPTCHA to solve puzzles, which have been getting increasingly difficult. Instead of having to squint one's eyes and identify pictures of a laughing zebra, one could submit some other user metric that captures user's interactions on the internet and uses it to prove humanness. This is exactly what's done by Privacy Pass, which uses user's reputation score calculated by cloudflare to get past CAPTCHAs. 
-
-Secondly, not every user info has to be treated the same; some need more protective measures than others.
-
-### 1.3 Collection
-
-How do you fill a form such that only you know the filled values, yet the surveyor can rest assured that certain constraints ( like values being of specific data types or range) were satisfied ? With Zero Knowledge Proof, we can prove that the submitted values satisfy the supplied constraints and are also the same values whose encrypted form has been submitted. This method ensures that your private information is not leaked when you're not doing anything valuable using it. 
-
-### 1.4 Processing
-
-Depending upon what is requested, a user's data can be presented in various ways. For example, requester may ask to be disclosed a set of attribute values either in clear text or in an encrypted form, requester may ask the user to prove a statement on his data using zero knowledge proof instead of revealing directly, requester may ask for only the result of an aggregation function applied to data from multiple users without having to know individual values. 
-
-### 1.5 Sharing Incentives
-
-Rewarding users for sharing information can encourage privacy friendly approach where user would want to retain full custody of their data and use it wisely. 
-
-## 2 Related Work
-
-Private Aggregation Schemes like Prio enable computation of aggregate statistic such that individual values are not revealed to any parties, not even the servers that perform the aggregation. This technology has been used by Mozilla Firefox Browser, ENPA, DivviUP
-To ensure these user submitted values are reliable, some authority issues verifiable credential to these users. This verifiable credential includes in them the attribute values whose correctness is verified later during credential presentation. 
-
-## 3. Preliminaries
-
-### 3.1 Verifiable Credential
-
-### 3.2 Zero Knowledge Proofs
-
-### 3.3 Private Aggregation
-
-## Technical Details
+## 3. Technical Details
 
 
-## Application
+## 4. Application
 
+### 4.1 Advertisement without third party cookies
+### 4.2 Data Market
+### 4.3 User profile integrations
+### 4.4 Machine Learning
