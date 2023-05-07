@@ -4,11 +4,11 @@ This article proposes a privacy friendly means of collecting and aggregating sta
 
 Here, user's private data is represented in the form a verifiable credential. Having the data in this form provides multiple benefits. First, the aggregation servers can verify the credential to ensure that the values contained in it satisfy the necessary criterion and aren't malicious. This is useful for spam protection, avoid duplicate submissions, maintain blacklisting through credential revocation list, targeting specific demograpic and more. 
 
-Alongside this, verifiable credential can be presented individually (i.e. without aggregation) either by revealing its attribute values or by providing a zero knowledge proof of apredicate on the attribute. These are well known ways in which verifiable credentials are used. Credentials can be issued such that even the issuer does not know the exact values contained in it, thus providing privacy from issuers. However, to ensure that the supplied values agree to some constraints (e.g. falls in some range), the users provide zero knowledge proof to issuer proving that the request is valid.
+Alongside this, verifiable credential can be presented individually (i.e. without aggregation) either by revealing its attribute values or by providing a zero knowledge proof of a predicate on the attribute. These are well known ways in which verifiable credentials are used. Credentials can be issued such that even the issuer does not know the exact values contained in it, thus providing privacy from issuers. However, to ensure that the supplied values agree to some constraints (e.g. falls in some range), the users provide zero knowledge proof to issuer proving that the request is valid.
 
 With combined benefits of verifiable credential and private aggregation, user's private data is never revealed to any of the parties (unless deliberate) yet verifiable aggregate statistic can be computed.
 
-We remark here that use of verifiable credential to hold private values makes it difficult to work on large volumes of data per user since each of these data values seemingly needs to first go through issuance process and other related heavy computations. However, in this context, we can use credential as the initial condition to establish trust, while successive points can chain of trust starting from the initial credential. This eliminates the requirement for a separately issued credential for each data points. For this design, we take references from the technology behind expensive key-agreement protocols (e.g. X3DH) followed by cheap message exchange protocols (e.g. Double Ratchet alogrithm).
+We remark here that use of verifiable credential to hold private values makes it difficult to work on large volumes of data per user since each of these data values seemingly needs to first go through issuance process and other related heavy computations. However, in this context, we can use credential as the initial condition to establish trust, while successive points can form a chain of trust starting from the initial credential. This eliminates the requirement for a separately issued credential for each data points. For this design, we take references from the technology behind expensive key-agreement protocols (e.g. X3DH, asymmetric encryption) followed by cheap message exchange protocols (e.g. Double Ratchet alogrithm, symmetric encryption).
 
 
 ## 1. Introduction
@@ -50,6 +50,23 @@ Use of verifiable credential provides authentication, integrity of data, spam pr
 
 ## 3. Technical Details
 
+### 3.1. Credential Issuance
+- A schema which specifies the attributes present in a credential is published by issuer or any third party. If the values for the attributes need to satisfy some predicate, then zero-knowledge proof statement is also published for users to use.
+- Users find the credential(s) which they want to get issued. They create appropriate request based on the schema published. Additional criterion like having to satisfy some predicate to be able to apply for certain type of credential depends upon the usecase.
+- Issuer issues verifiable credential based upon the issuance request and the user should be able to verify that the provided credential is correctly formed.
+
+### 3.2. Credential Presentation without aggregation
+- A data requester will create a request object which includes the attribute he wants to obtain from the users and optionally, the criteria that defines who is eligible to make submissions.
+- A user, if he wants to, will present the necessary credential. 
+
+### 3.3. Credential Presentation with aggregation
+- A data requester will create a request object as mentioned above.
+- User will split the attribute value(s) using additive secret sharing and distribute shares of the credential to each of the aggregation servers.
+- An aggregation server will recieve his secret share of the attribute values and commitment to secret shares of the same attribute values of other users. This much info is sufficient for each of the aggregation servers to individually verify that the credential was well formed.
+- The aggregation servers receive such credentials from multiple users to compute aggregate statistic.
+- During aggregation, the servers require Beaver multiplication triple from a trusted source. These values are usually submitted by the data requester himself.
+- The aggregation servers now use recursive zk-SNARK to compute aggregate statistic and a proof of correct computation. Such proof is verified by the other aggregation servers.
+- After each aggregation result is verified, then they are all published and the addition of these values is the actual aggregate statistic. The data requester will receive this value.
 
 ## 4. Application
 
