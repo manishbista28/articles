@@ -13,17 +13,31 @@ We remark here that use of verifiable credential to hold private values makes it
 
 ## 1. Introduction
 
-### 1.1  State of User Privacy
+### 1.1 Private Aggregate Statistic
 
-User information like credentials, preferences and other details shared online have shaped prominent techs like social media, advertisement and marketing tools, recommendation systems, etc. Because the same information of a user is valuable to a large number of use cases, it's no surprise that this value has given rise to a market where personal data is collectively aggregated, refined and sold. For example, the use of third party cookies to collect and share user data across sites, use of targeted ads to shape user behavior and shady ways to uniquely identify (fingerprint) a user despite not sharing any personal details deliberately have led to a much reduced user trust in these systems. Because of how deeply ingrained these methods are, getting rid of them would lead to an incovenient user experience or the need for a different economic model altogether. Fortunately, recent advances in cryptography and increasing demands from the general public have made it possible to design and implement systems focused on maintaining user privacy. Few of such systems are as given below. 
+A user's private data (e.g. credentials, web browser activity, gps location, health records) can be used together with readings of same type from other users to draw aggregate statistic in a way readings from any single user is not known to anyone else and as such privacy is preserved. Some real world usage of such tech are the following.
 
-- browser telemetry systems collect and operate on aggregated user data to extract relevant metrics all the while ensuring user privacy, 
-- ENPA notifies user of potential exposure to COVID without accessing individual user details,
-- Google Privacy Sandbox is working on technologies like Topics API, Fledge, Reporting API which will replace use of third party cookies,
-- advances in zero knowledge proofs make it possible to prove a statement while hiding private details, 
-- multi-party computation ensures no single data handling server has autonomous access to user data and so on. 
+- Mozilla web browser collects telemetry data and generates aggregate statistics. This is helpful to know prevalance of errors, performance metrics, top sites visited and user preference, ad categories viewed or clicked and so on.
+- ENPA notifies user of potential exposure to COVID by collecting proximity data.
 
-It is safe to assume that these privacy friendly techs will find more applications in near future, starting with those where the demand for privacy is relatively higher.
+### 1.2 Verifiable Credential
+
+A different way for a user to report private data is through the presentation of a verifiable credential. A credential (e.g. birth credential) is a combination of attributes (e.g. DOB, gender, location) which is issued by an issuer (e.g. government authority) and can later by presented to a verifier (e.g. liquor store) as a proof of having met some necessary criteria (e.g. above age 18). Following are some of its noteworthy properties.
+
+- Blind Issuance: Issuer does not have to know attribute values requested to be included in a credential. Instead it might require a proof that the attribute value meet certain criteria (e.g. value is from one of the possible choices) which can be done with zero-knowledge proofs.
+- Composition: Different credential (e.g. age credential and university credential) can be composed to create a new one that includes selected attribute values from the source. This is done without having to consult with the issuer again.
+- Multi-show unlinkability: Multiple presentation of the same credential can not be linked together. As such, same credential can be presented on different places without having to worry about the chances of usage being correlated.
+- Selective Disclosure: Only selected attributes of a credential can be disclosed to the verifier while the rest will remain hidden. Despite having some of these values hidden, the verifier can still verify that the credential is well formed with respective to these attribute combination.
+- Predicates on attributes: Instead of revealing any attribute, the verifier can prove that some attribute meets some criteria.
+
+### 1.3 Mixing credentials and aggregation
+
+Verifiable credential and private aggregation are similar in that they both work on user private data and provide ways to present it or some computation on it. However they each have their shortcomings or are incomplete individually. Some of the reasons are as follows.
+
+- Repeated credential issuance or for large number of data points is computationally costly and is not what verifiable credentials are designed for. So if a use case requires working on frequent data and relatively fast computation, the flow of credential issuance and presentation will not sustain.
+- Private Aggregation requires the input data points to be from credible source but does not itself have ways to ensure it.
+
+Use of verifiable credential provides authentication, integrity of data, spam protection, avoiding duplicates and maintaining blacklisted requests. These features are required and helpful for private aggregation.
 
 
 ### 1.2 Representing User Info
