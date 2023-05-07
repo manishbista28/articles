@@ -71,6 +71,12 @@ Use of verifiable credential provides authentication, integrity of data, spam pr
 ## 4. Application
 
 ### 4.1 Advertisement without third party cookies
+Google Topics API makes use of a list of topics to classify a user's interest. Current [draft](https://github.com/patcg-individual-drafts/topics/blob/main/taxonomy_v1.md) includes around 400 of them. This goes to show that there are finitely many attribute values to represent a user's interest and display personalized ads. Additionally, our current design supports user specified profile information captured in a credential. This can be helpful especially since the use of Google Topics API is known to be less effective compared to the use of third party tokens.
+
 ### 4.2 Data Market
+Because data is never exposed and is valuable for data requesters, a market, to buy and sell private data or some computation on it, can be formed.
+
 ### 4.3 User profile integrations
+User profile information can be ported to other applications.
+
 ### 4.4 Machine Learning
