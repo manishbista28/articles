@@ -66,11 +66,11 @@ We believe that the product has a few set of merits that unlocks a large and div
 
 2. Unique and Efficient
 
-    The product binds recent advances in tehnology and standards like zero-knowledge proofs, simple multi party computation, private aggregate statistics, tokenomics, verifiable credential standards to build a useful and efficient product that can run in user's device. It provides features that users have been accustomed to and does so in a privacy preserving and beneficial way. This sets it apart from currently existing products. 
+    The product binds recent advances in tehnology and standards like zero-knowledge proofs, secure multi party computation, private aggregate statistics, tokenomics, verifiable credential standards to build a useful and efficient product that can run in user's device. It provides features that users have been accustomed to and does so in a privacy preserving and beneficial way. This sets it apart from currently existing products. 
 
 2. Focus on Privacy Enhancing Technology
 
-    There has been growth on privacy enhancing technology and public discourse on it. For example, the gradual discontinuation of third party tokens as a means for personalized ad suggestions, which has been a major source of revenue for big tech shows how powerful the driving force is. When businesses themselves push user privacy even if for marketing edge, the community learns the benefits and paves way for privacy friendly applications to grow.
+    There has been growth on privacy enhancing technology and public discourse on it. For example, the gradual discontinuation of third party cookies as a means for personalized ad suggestions, which has been a major source of revenue for big tech shows how powerful the driving force is. When businesses themselves push user privacy even if for marketing edge, the community learns the benefits and paves way for privacy friendly applications to grow.
 
 3. Blockchains and Tokenization
 
@@ -78,7 +78,7 @@ We believe that the product has a few set of merits that unlocks a large and div
 
 4. Synergy with Existing Products
 
-    Verifiable Credential mixes in well with **web3 Gaming, NFTs and Defi*. Users holding an NFT can request a token gated issuer to issue it a verifiable credential containing attributes present in the NFTs metadata. The user can then use this cryptographic proof to show that it holds a valid NFT alongside all the benefits of ZK Proof and Verifiable Credential. 
+    Verifiable Credential mixes in well with **web3 Gaming, NFTs and Defi**. Users holding an NFT can request a token gated issuer to issue it a verifiable credential containing attributes present in the NFTs metadata. The user can then use this cryptographic proof to show that it holds a valid NFT alongside all the benefits of ZK Proof and Verifiable Credential. 
 
 
 ## Roadmap
