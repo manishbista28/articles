@@ -4,7 +4,8 @@ Contents
 2. key_agreement.md - Key Agreement Protocols, X3DH, MLS
 3. signal_group.md - How group messaging works on Signal App
 
-Coming up Next
+Coming up Next:
+
 4. Basic Attention Token 
     - Whether rewarding ad viewers is not an organic way to assess user interest/attention
     - Current systems reward ad publishers (or product creators) and products wich aim to find ways to become more influential and useful gain attention
