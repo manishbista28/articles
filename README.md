@@ -6,20 +6,24 @@ Contents
 
 Coming up Next:
 
-4. Basic Attention Token 
+4. ZK Rollups in Bitcoin
+    - Taproot
+    - FRI
+
+5. Basic Attention Token 
     - Whether rewarding ad viewers is not an organic way to assess user interest/attention
     - Current systems reward ad publishers (or product creators) and products wich aim to find ways to become more influential and useful gain attention
     - Rewarding users draws views to products which invest more on ad rewards than product ?
 
-5. Privacy in NFT utilities
+6. Privacy in NFT utilities
     - Why have NFT utilities been [slow to progress](https://messari.io/report/evolution-of-web3-communities)
     - ZK has been useful more for scaling than for hiding property ? (ImmutableX)
     - Why NFT is still an enabler for other technology (e.g. verifiable credentials, zero-knowledge proofs)
 
-6. Ad Tech
+7. Ad Tech
     - If Ad Tech could be redesigned, how would it look ?
     - Can web3 Ad ecosystem be different from web2 and exist separately
     
-7. Data Economy
+8. Data Economy
     - Can Data Economy be a new source of growth in blockchain ecosystems
     - Finding a market for user to trade their data and doing so securely, privately
